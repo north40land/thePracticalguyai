@@ -1,0 +1,445 @@
+@import 'tailwindcss';
+
+/* ----------------------------------------------------------------------------
+   Design tokens (fixed system). Exposed to Tailwind as utilities via @theme,
+   so e.g. --color-accent -> bg-accent / text-accent / border-accent.
+---------------------------------------------------------------------------- */
+@theme {
+  --color-bg: #efebe6; /* warm near-white background */
+  --color-surface: #f7f4f0; /* light card */
+  --color-dark: #1c1a18; /* dark card / ink */
+  --color-ink: #1c1a18; /* primary text on light */
+  --color-body: #4b4640; /* body on light */
+  --color-muted: #8a847e; /* muted label */
+  --color-cream: #f4f1ec; /* text on dark */
+  --color-creambody: #b5afa8; /* body on dark */
+  --color-accent: #c2552e; /* burnt orange, the only color */
+  --color-accent-2: #e89456; /* lighter accent, small touches on dark */
+  --color-line: #d8d2cb; /* hairline on background */
+  --color-cardline: #e2dbd3; /* hairline on cards */
+
+  --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Newsreader', ui-serif, Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --radius-card: 16px;
+  --radius-control: 8px;
+
+  --ease-out: cubic-bezier(0.22, 0.72, 0.2, 1);
+}
+
+/* Derived hover-only tones (not part of the public palette, never on a surface) */
+:root {
+  --accent-press: #a8461f;
+}
+
+/* ----------------------------------------------------------------------------
+   Base
+---------------------------------------------------------------------------- */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-bg);
+    color: var(--color-body);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: #fff;
+  }
+
+  /* Visible keyboard focus everywhere, accent-tinted. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--color-ink);
+    letter-spacing: -0.018em;
+    line-height: 1.05;
+    margin: 0;
+    text-wrap: balance;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Typographic roles
+---------------------------------------------------------------------------- */
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .shell {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Mono eyebrow / label / metadata */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .eyebrow--accent {
+    color: var(--color-accent);
+  }
+
+  .label {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* Accent dot used in eyebrows */
+  .dot {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 9999px;
+    background-color: var(--color-accent);
+    flex: none;
+  }
+
+  /* Serif lede / body copy */
+  .prose-serif {
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: var(--color-body);
+    line-height: 1.6;
+  }
+
+  /* ------------------------------------------------------------------ Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-control);
+    padding: 0.8rem 1.3rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition:
+      transform 0.25s var(--ease-out),
+      background-color 0.25s var(--ease-out),
+      border-color 0.25s var(--ease-out),
+      color 0.25s var(--ease-out),
+      box-shadow 0.25s var(--ease-out);
+    text-decoration: none;
+  }
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(28, 26, 24, 0.08);
+  }
+  .btn-primary:hover {
+    background-color: var(--accent-press);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px -10px rgba(168, 70, 31, 0.55);
+  }
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--color-ink);
+    border-color: var(--color-line);
+  }
+  .btn-ghost:hover {
+    background-color: var(--color-surface);
+    border-color: var(--color-muted);
+    transform: translateY(-1px);
+  }
+  .btn-pill {
+    border-radius: 9999px;
+    background-color: var(--color-ink);
+    color: var(--color-cream);
+    padding: 0.55rem 1.15rem;
+    font-size: 0.85rem;
+  }
+  .btn-pill:hover {
+    background-color: #000;
+    transform: translateY(-1px);
+  }
+
+  /* The arrow glyph nudges on hover */
+  .btn .arrow {
+    transition: transform 0.25s var(--ease-out);
+  }
+  .btn:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  /* Coaching card with a thin burnt-orange top rule */
+  .rule-card {
+    position: relative;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-cardline);
+    border-radius: var(--radius-card);
+  }
+  .rule-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background-color: var(--color-accent);
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+  }
+
+  /* Form controls */
+  .field-label {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .input {
+    width: 100%;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-control);
+    padding: 0.75rem 0.9rem;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 0.97rem;
+    color: var(--color-ink);
+    transition:
+      border-color 0.2s var(--ease-out),
+      box-shadow 0.2s var(--ease-out);
+  }
+  .input::placeholder {
+    color: var(--color-muted);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(194, 85, 46, 0.14);
+  }
+
+  /* Outlined mono status pill */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.28rem 0.6rem;
+    border-radius: 9999px;
+    border: 1px solid currentColor;
+    line-height: 1;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Motion: one orchestrated hero entrance, then quiet scroll reveals + lifts.
+---------------------------------------------------------------------------- */
+
+/* Scroll-triggered reveal (set visible by IntersectionObserver). */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero headline: masked, clipped, staggered line reveal. */
+.hero-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.04em; /* let descenders clear the clip */
+}
+.hero-line > span {
+  display: block;
+  transform: translateY(115%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-anim .hero-line > span {
+    animation: line-rise 0.92s var(--ease-out) forwards;
+    animation-delay: var(--line-delay, 0ms);
+  }
+  .hero-fade {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fade-rise 0.8s var(--ease-out) forwards;
+    animation-delay: var(--fade-delay, 0ms);
+  }
+}
+
+@keyframes line-rise {
+  from {
+    transform: translateY(115%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes fade-rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Card hover lift */
+.lift {
+  transition:
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out);
+}
+
+/* ----------------------------------------------------------------------------
+   Build cards: clickable header + smooth disclosure of Problem / Built / Result
+---------------------------------------------------------------------------- */
+.build-card {
+  position: relative;
+  border: 1px solid var(--color-cardline);
+}
+.build-card.is-dark {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.build-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 40px -28px rgba(28, 26, 24, 0.45);
+}
+.build-card.is-dark:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+.build-card:has(.build-toggle:focus-visible) {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(194, 85, 46, 0.18);
+}
+
+.build-toggle {
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+/* Stretch the click target over the whole card without a wrapping interactive element. */
+.build-toggle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-card);
+}
+/* The accent focus ring belongs to the card, not the inner text block. */
+.build-toggle:focus-visible {
+  outline: none;
+}
+
+.plus {
+  display: inline-grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  font-size: 1.05rem;
+  font-family: var(--font-mono);
+  line-height: 1;
+  color: var(--color-accent);
+  transition: transform 0.4s var(--ease-out);
+}
+.build-card.is-dark .plus {
+  color: var(--color-accent-2);
+}
+.plus.is-open {
+  transform: rotate(135deg);
+}
+
+.build-detail {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s var(--ease-out);
+}
+.build-detail > div {
+  overflow: hidden;
+}
+.build-detail.is-open {
+  grid-template-rows: 1fr;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hero-line > span {
+    transform: none;
+  }
+  .hero-fade {
+    opacity: 1;
+    transform: none;
+  }
+  .lift {
+    transition: none;
+  }
+  .btn,
+  .btn .arrow {
+    transition: none;
+  }
+  .build-detail,
+  .plus {
+    transition: none;
+  }
+}
